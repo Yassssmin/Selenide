@@ -19,17 +19,10 @@ public class CardDeliveryTest {
     @BeforeEach
     void setUp() {
         openSite();
-        clearDateField();
     }
 
     void openSite() {
         open("http://localhost:9999");
-    }
-
-    void clearDateField() {
-        for (int i = 0; i < 10; i++) {
-            $("input[type='tel']").toWebElement().sendKeys(Keys.BACK_SPACE);
-        }
     }
 
     private String getValidDateString() {
@@ -54,26 +47,40 @@ public class CardDeliveryTest {
     @Test
     void shouldCardDeliverySuccess() {
         $("input[type='text']").setValue("Москва");
+        $("input[type='tel']").sendKeys(Keys.chord(Keys.SHIFT, Keys.HOME), Keys.BACK_SPACE);
         $("input[type='tel']").setValue(getValidDateString());
         $("input[name='name']").setValue("Василий Иванович");
         $("input[name='phone']").setValue("+79990873456");
         $("[data-test-id=agreement]").click();
         $(withText("Забронировать")).click();
         $(byText("Успешно!")).waitUntil(visible, 15000);
+
+        String dataNow = $("input[type='tel']").val();
+
+        $(".notification__content")
+                .shouldHave(text("Встреча успешно забронирована на " + dataNow));
+
     }
     @Test
     void shouldCardDeliverySuccessWithHyphen() {
         $("input[type='text']").setValue("Москва");
+        $("input[type='tel']").sendKeys(Keys.chord(Keys.SHIFT, Keys.HOME), Keys.BACK_SPACE);
         $("input[type='tel']").setValue(getValidDateString());
         $("input[name='name']").setValue("Василий Иванович-оглы");
         $("input[name='phone']").setValue("+79990873456");
         $("[data-test-id=agreement]").click();
         $(withText("Забронировать")).click();
         $(byText("Успешно!")).waitUntil(visible, 15000);
+
+        String dataNow = $("input[type='tel']").val();
+
+        $(".notification__content")
+                .shouldHave(text("Встреча успешно забронирована на " + dataNow));
     }
     @Test
     void shouldCardDeliveryCityInvalid() {
         $("input[type='text']").setValue("Подольск");
+        $("input[type='tel']").sendKeys(Keys.chord(Keys.SHIFT, Keys.HOME), Keys.BACK_SPACE);
         $("input[type='tel']").setValue(getValidDateString());
         $("input[name='name']").setValue("Василий Иванович");
         $("input[name='phone']").setValue("+79990873456");
@@ -84,6 +91,7 @@ public class CardDeliveryTest {
     @Test
     void shouldCardDeliveryCityEmpty() {
         $("input[type='text']").setValue("");
+        $("input[type='tel']").sendKeys(Keys.chord(Keys.SHIFT, Keys.HOME), Keys.BACK_SPACE);
         $("input[type='tel']").setValue(getValidDateString());
         $("input[name='name']").setValue("Василий Иванович");
         $("input[name='phone']").setValue("+79990873456");
@@ -94,6 +102,7 @@ public class CardDeliveryTest {
     @Test
     void shouldCardDeliveryDataInvalid() {
         $("input[type='text']").setValue("Москва");
+        $("input[type='tel']").sendKeys(Keys.chord(Keys.SHIFT, Keys.HOME), Keys.BACK_SPACE);
         $("input[type='tel']").setValue(getInvalidDateString());
         $("input[name='name']").setValue("Василий Иванович");
         $("input[name='phone']").setValue("+79990873456");
@@ -104,6 +113,7 @@ public class CardDeliveryTest {
     @Test
     void shouldCardDeliveryDataEmpty() {
         $("input[type='text']").setValue("Москва");
+        $("input[type='tel']").sendKeys(Keys.chord(Keys.SHIFT, Keys.HOME), Keys.BACK_SPACE);
         $("input[type='tel']").setValue("");
         $("input[name='name']").setValue("Василий Иванович");
         $("input[name='phone']").setValue("+79990873456");
@@ -114,26 +124,31 @@ public class CardDeliveryTest {
     @Test
     void shouldCardDeliveryNameAndSurnameInvalid() {
         $("input[type='text']").setValue("Москва");
+        $("input[type='tel']").sendKeys(Keys.chord(Keys.SHIFT, Keys.HOME), Keys.BACK_SPACE);
         $("input[type='tel']").setValue(getValidDateString());
         $("input[name='name']").setValue("John Cooper");
         $("input[name='phone']").setValue("+79990873456");
         $("[data-test-id=agreement]").click();
         $(withText("Забронировать")).click();
-        $(byText("Имя и Фамилия указаные неверно. Допустимы только русские буквы, пробелы и дефисы.")).shouldHave(text("Имя и Фамилия указаные неверно. Допустимы только русские буквы, пробелы и дефисы."));
+        $(byText("Имя и Фамилия указаные неверно. Допустимы только русские буквы, пробелы и дефисы."))
+                .shouldHave(text("Имя и Фамилия указаные неверно. Допустимы только русские буквы, пробелы и дефисы."));
     }
     @Test
     void shouldCardDeliveryNameAndSurnameInvalidWithSymbols() {
         $("input[type='text']").setValue("Москва");
+        $("input[type='tel']").sendKeys(Keys.chord(Keys.SHIFT, Keys.HOME), Keys.BACK_SPACE);
         $("input[type='tel']").setValue(getValidDateString());
         $("input[name='name']").setValue("!@#$%^&*()_+=/.,");
         $("input[name='phone']").setValue("+79990873456");
         $("[data-test-id=agreement]").click();
         $(withText("Забронировать")).click();
-        $(byText("Имя и Фамилия указаные неверно. Допустимы только русские буквы, пробелы и дефисы.")).shouldHave(text("Имя и Фамилия указаные неверно. Допустимы только русские буквы, пробелы и дефисы."));
+        $(byText("Имя и Фамилия указаные неверно. Допустимы только русские буквы, пробелы и дефисы."))
+                .shouldHave(text("Имя и Фамилия указаные неверно. Допустимы только русские буквы, пробелы и дефисы."));
     }
     @Test
     void shouldCardDeliveryNameAndSurnameEmpty() {
         $("input[type='text']").setValue("Москва");
+        $("input[type='tel']").sendKeys(Keys.chord(Keys.SHIFT, Keys.HOME), Keys.BACK_SPACE);
         $("input[type='tel']").setValue(getValidDateString());
         $("input[name='name']").setValue("");
         $("input[name='phone']").setValue("+79990873456");
@@ -144,26 +159,31 @@ public class CardDeliveryTest {
     @Test
     void shouldCardDeliveryPhoneInvalid() {
         $("input[type='text']").setValue("Москва");
+        $("input[type='tel']").sendKeys(Keys.chord(Keys.SHIFT, Keys.HOME), Keys.BACK_SPACE);
         $("input[type='tel']").setValue(getValidDateString());
         $("input[name='name']").setValue("Василий Иванович");
         $("input[name='phone']").setValue("79990873456");
         $("[data-test-id=agreement]").click();
         $(withText("Забронировать")).click();
-        $(byText("Телефон указан неверно. Должно быть 11 цифр, например, +79012345678.")).shouldHave(text("Телефон указан неверно. Должно быть 11 цифр, например, +79012345678."));
+        $(byText("Телефон указан неверно. Должно быть 11 цифр, например, +79012345678."))
+                .shouldHave(text("Телефон указан неверно. Должно быть 11 цифр, например, +79012345678."));
     }
     @Test
     void shouldCardDeliveryPhoneInvalidWithSymbols() {
         $("input[type='text']").setValue("Москва");
+        $("input[type='tel']").sendKeys(Keys.chord(Keys.SHIFT, Keys.HOME), Keys.BACK_SPACE);
         $("input[type='tel']").setValue(getValidDateString());
         $("input[name='name']").setValue("Василий Иванович");
         $("input[name='phone']").setValue("!@#$%^&*()_+=/.,");
         $("[data-test-id=agreement]").click();
         $(withText("Забронировать")).click();
-        $(byText("Телефон указан неверно. Должно быть 11 цифр, например, +79012345678.")).shouldHave(text("Телефон указан неверно. Должно быть 11 цифр, например, +79012345678."));
+        $(byText("Телефон указан неверно. Должно быть 11 цифр, например, +79012345678."))
+                .shouldHave(text("Телефон указан неверно. Должно быть 11 цифр, например, +79012345678."));
     }
     @Test
     void shouldCardDeliveryPhoneEmpty() {
         $("input[type='text']").setValue("Москва");
+        $("input[type='tel']").sendKeys(Keys.chord(Keys.SHIFT, Keys.HOME), Keys.BACK_SPACE);
         $("input[type='tel']").setValue(getValidDateString());
         $("input[name='name']").setValue("Василий Иванович");
         $("input[name='phone']").setValue("");
@@ -174,6 +194,7 @@ public class CardDeliveryTest {
     @Test
     void shouldCardDeliveryFlagOff() {
         $("input[type='text']").setValue("Москва");
+        $("input[type='tel']").sendKeys(Keys.chord(Keys.SHIFT, Keys.HOME), Keys.BACK_SPACE);
         $("input[type='tel']").setValue(getValidDateString());
         $("input[name='name']").setValue("Василий Иванович");
         $("input[name='phone']").setValue("+79990873456");
@@ -199,10 +220,7 @@ public class CardDeliveryTest {
             $(".calendar__arrow_direction_right[data-step='1']").click();
         }
 
-        long timestampInMs = plusWeek.toEpochSecond(LocalTime.MIDNIGHT, ZoneOffset.systemDefault().getRules().getOffset(Instant.now())) * 1000;
-
-        $(".calendar__day[data-day='" + timestampInMs + "']").click();
-
+        $$("td.calendar__day").find(text(String.valueOf(plusWeek.getDayOfMonth()))).click();
         // Остальные поля
         $("input[type='text']").setValue("Мо");
         $(withText("Москва")).click();
@@ -211,5 +229,10 @@ public class CardDeliveryTest {
         $("[data-test-id=agreement]").click();
         $(withText("Забронировать")).click();
         $(byText("Успешно!")).waitUntil(visible, 15000);
+
+        String dataNow = $("input[type='tel']").val();
+
+        $(".notification__content")
+                .shouldHave(text("Встреча успешно забронирована на " + dataNow));
     }
 }
